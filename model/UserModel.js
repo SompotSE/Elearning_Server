@@ -31,6 +31,10 @@ module.exports = (sequelize, Sequelize) => {
                 type: Sequelize.STRING,
                 field: 'password'
             },
+            sendNewsEmail: {
+                type: Sequelize.STRING,
+                field: 'sendNewsEmail'
+            },
             userRoleId: {
                 type: Sequelize.INTEGER,
                 field: 'userRoleId'

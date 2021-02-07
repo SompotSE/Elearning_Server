@@ -1,23 +1,23 @@
 module.exports = (sequelize, Sequelize) => {
-    const UserCourse = sequelize.define(
-        'usercourse',
+    const UserTopic = sequelize.define(
+        'usertopic',
         {
-            usercourseId: {
+            usertopicId: {
                 type: Sequelize.INTEGER,
-                field: 'usercourseId',
+                field: 'usertopicId',
                 primaryKey: true
             },
             courseCode: {
                 type: Sequelize.STRING,
                 field: 'courseCode'
             },
+            topicCode: {
+                type: Sequelize.STRING,
+                field: 'topicCode'
+            },
             userId: {
                 type: Sequelize.INTEGER,
                 field: 'userId'
-            },
-            downlodeDoc: {
-                type: Sequelize.STRING,
-                field: 'downlodeDoc'
             },
             time: {
                 type: Sequelize.INTEGER,
@@ -43,5 +43,5 @@ module.exports = (sequelize, Sequelize) => {
             freezeTableName: true
         }
     );
-    return UserCourse;
+    return UserTopic;
 };

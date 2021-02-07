@@ -128,28 +128,38 @@ route.post('/Login', async (req, res, next) => {
                                     "data": []
                                 });
                             } else {
-                                let scretKey2 = user.email + scretKey.scretKey;
-                                let jwtToken = jwt.sign({
-                                    email: user.email,
-                                    userId: userName[0].userId
-                                },
-                                    scretKey2, {
-                                    expiresIn: "7d"
-                                });
-
-                                res.cookie('token', jwtToken, { httpOnly: true });
-                                res.json({
-                                    "status": true,
-                                    "message": "Authentication Success",
-                                    "data": {
-                                        "token": jwtToken,
-                                        "email": user.email,
-                                        "userCode": userName[0].userCode,
-                                        "name": userName[0].name,
-                                        "phone": userName[0].phone,
+                                console.log(userName[0].confirmRegister, " userName[0].confirmRegister")
+                                if (userName[0].confirmRegister == "A") {
+                                    let scretKey2 = user.email + scretKey.scretKey;
+                                    let jwtToken = jwt.sign({
+                                        email: user.email,
+                                        userId: userName[0].userId
                                     },
-                                    "expiresIn": 604800
-                                });
+                                        scretKey2, {
+                                        expiresIn: "7d"
+                                    });
+
+                                    res.cookie('token', jwtToken, { httpOnly: true });
+                                    res.json({
+                                        "status": true,
+                                        "message": "Authentication Success",
+                                        "data": {
+                                            "token": jwtToken,
+                                            "email": user.email,
+                                            "userCode": userName[0].userCode,
+                                            "name": userName[0].name,
+                                            "phone": userName[0].phone,
+                                        },
+                                        "expiresIn": 604800
+                                    });
+                                }
+                                else {
+                                    res.json(newUser = {
+                                        "status": false,
+                                        "message": "You Not Confirm Email",
+                                        "data": []
+                                    });
+                                }
                             }
                         })
                         .catch((error) => {
@@ -197,7 +207,7 @@ route.post('/ChangePassword', authorization.authorization, async (req, res, next
                             if (!result) {
                                 res.json({
                                     "status": false,
-                                    "message": "Authentication failed",
+                                    "message": "Password Wrong",
                                     "data": []
                                 });
                             } else {
@@ -252,7 +262,7 @@ route.post('/ChangePassword', authorization.authorization, async (req, res, next
     } else {
         res.json({
             "status": false,
-            "message": "Authentication failed",
+            "message": "Not user",
             "data": []
         });
     }

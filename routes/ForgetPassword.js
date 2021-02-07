@@ -4,6 +4,7 @@ const bcrypt = require('bcrypt');
 const nodemailer = require("nodemailer");
 const authorization = require('../util/authorization');
 const { QueryTypes } = require('sequelize');
+const moment = require('moment-timezone');
 
 const sequelize = db.sequelize;
 const UserModel = db.UserModel;
@@ -50,6 +51,7 @@ route.post('/ForgetPassword', async (req, res, next) => {
                                         });
                                 })
                                 .catch((error) => {
+                                    console.log(error, " error")
                                     res.json({
                                         "status": false,
                                         "message": "Not Create Forget Password",

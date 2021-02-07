@@ -11,8 +11,14 @@ app.use(express.static('public'));
 
 const user = require('./routes/User');
 const forgetpassword = require('./routes/ForgetPassword');
+const usercourse = require('./routes/UserCourse');
+const usertopic = require('./routes/UserTopic');
+const userexamination = require('./routes/UserExamination');
 
 app.use('/User', user);
 app.use('/ForgetPassword', forgetpassword);
+app.use('/UserCourse', usercourse);
+app.use('/UserTopic', usertopic);
+app.use('/UserExamination', userexamination);
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));
