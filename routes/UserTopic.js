@@ -1,6 +1,7 @@
 const express = require('express');
 const db = require('../util/db.config');
 const authorization = require('../util/authorization');
+const authorizationadmin = require('../util/authorizationadmin');
 const { QueryTypes } = require('sequelize');
 
 const sequelize = db.sequelize;
@@ -19,17 +20,6 @@ route.get('/find/:courseCode', authorization.authorization, async (req, res, nex
     });
 });
 
-// route.put('/find/all', authorization.authorization, async (req, res, next) => {
-//     var alltopic = [];
-//     var query = `SELECT a.courseCode,COUNT(*) as count FROM topic a GROUP BY a.courseCode`;
-//     alltopic = await sequelize.query(query, { type: QueryTypes.UPDATE });
-//     res.json({
-//         "status": true,
-//         "message": "Success",
-//         "data": alltopic
-//     });
-// });
-
 route.get('/find/all/user', authorization.authorization, async (req, res, next) => {
     const userId = req.params.userId;
     var alltopicuser = [];
@@ -43,6 +33,28 @@ route.get('/find/all/user', authorization.authorization, async (req, res, next) 
                 GROUP BY z.courseCode
                 `;
     alltopicuser = await sequelize.query(query, { replacements: { userId: userId }, type: QueryTypes.SELECT });
+    res.json({
+        "status": true,
+        "message": "Success",
+        "data": alltopicuser
+    });
+});
+
+route.get('/find/admin/detail/:courseCode/:userIdCourse', authorizationadmin.authorizationadmin, async (req, res, next) => {
+    const courseCode = req.params.courseCode;
+    const userIdCourse = req.params.userIdCourse;
+    var alltopicuser = [];
+    var query = `SELECT 
+                    a.topicCode,
+                    a.topicName,
+                    a.courseCode,
+                    b.time
+                FROM topic a 
+                LEFT JOIN usertopic b ON (a.topicCode = b.topicCode AND b.userId = :userIdCourse)
+                WHERE a.courseCode = :courseCode
+                ORDER BY a.topicSeq ASC 
+                `;
+    alltopicuser = await sequelize.query(query, { replacements: { userIdCourse: userIdCourse, courseCode: courseCode }, type: QueryTypes.SELECT });
     res.json({
         "status": true,
         "message": "Success",

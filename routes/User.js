@@ -5,6 +5,7 @@ const nodemailer = require("nodemailer");
 const jwt = require('jsonwebtoken');
 const scretKey = require('../util/ScretKey');
 const authorization = require('../util/authorization');
+const authorizationadmin = require('../util/authorizationadmin');
 const moment = require('moment-timezone');
 
 const { QueryTypes } = require('sequelize');
@@ -266,6 +267,32 @@ route.post('/ChangePassword', authorization.authorization, async (req, res, next
             "data": []
         });
     }
+});
+
+route.get('/Admin/User/All', authorizationadmin.authorizationadmin, async (req, res, next) => {
+    var user = [];
+    var query = `SELECT a.userId,a.userCode,a.name,a.nameCompany FROM user a WHERE a.confirmRegister = 'A' AND a.userRoleId = 2`;
+    user = await sequelize.query(query, { type: QueryTypes.SELECT });
+
+    await Promise.all(user.map(async (item) => {
+        var query = `SELECT 
+                        z.courseCode,
+                        SUM(z.countall) AS countall,
+                        SUM(z.countuser) AS countuser,
+                            (100 * SUM(z.countuser)) / SUM(z.countall) AS percen  
+                    FROM (SELECT a.courseCode,COUNT(*) as countall, 0 AS countuser FROM topic a GROUP BY a.courseCode
+                        UNION
+                        SELECT b.courseCode,0 AS countall,COUNT(*) as countuser FROM usertopic b WHERE b.userId = :userId GROUP BY b.courseCode ) z 
+                    GROUP BY z.courseCode
+                    ORDER BY z.courseCode ASC`;
+        item.detailTop = await sequelize.query(query, { replacements: { userId: item.userId }, type: QueryTypes.SELECT });
+    }));
+
+    res.json({
+        "status": true,
+        "message": "Success",
+        "data": user
+    });
 });
 
 async function sendEmail(email, genid) {

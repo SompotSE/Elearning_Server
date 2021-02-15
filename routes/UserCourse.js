@@ -1,6 +1,7 @@
 const express = require('express');
 const db = require('../util/db.config');
 const authorization = require('../util/authorization');
+const authorizationadmin = require('../util/authorizationadmin');
 const { QueryTypes } = require('sequelize');
 
 const sequelize = db.sequelize;
@@ -86,6 +87,40 @@ route.post('/create', authorization.authorization, async (req, res, next) => {
             "data": []
         });
     }
+});
+
+route.get('/Course/Detail/:userIdCourse', authorizationadmin.authorizationadmin, async (req, res, next) => {
+    const userIdCourse = req.params.userIdCourse;
+    // var user = [];
+    var query3 = `SELECT a.name,a.nameCompany FROM user a WHERE a.userId = :userId AND a.confirmRegister = 'A' AND a.userRoleId = 2`;
+    var user = await sequelize.query(query3, { replacements: { userId: userIdCourse }, type: QueryTypes.SELECT });
+
+    var query = `SELECT 
+                    b.courseCode,
+                    b.courseName,
+                    c.name,
+                    c.nameCompany
+                FROM usercourse a
+                LEFT JOIN course b ON a.courseCode = b.courseCode
+                LEFT JOIN user c ON a.userId = c.userId
+                WHERE a.userId = :userId
+                ORDER BY b.courseSeq ASC`;
+    user[0].userCourse = await sequelize.query(query, { replacements: { userId: userIdCourse }, type: QueryTypes.SELECT });
+
+    await Promise.all(user[0].userCourse.map(async (item) => {
+        var query1 = `SELECT a.topicCode,a.courseCode,a.time FROM usertopic a WHERE a.courseCode = :courseCode ORDER BY a.topicCode ASC`;
+        item.topic = await sequelize.query(query1, { replacements: { courseCode: item.courseCode }, type: QueryTypes.SELECT });
+
+        var query2 = `SELECT a.seq,a.courseCode,a.percenScore,a.time FROM userexamination a WHERE a.courseCode = :courseCode ORDER BY a.seq ASC`;
+        item.exam = await sequelize.query(query2, { replacements: { courseCode: item.courseCode }, type: QueryTypes.SELECT });
+
+    }));
+
+    res.json({
+        "status": true,
+        "message": "Success",
+        "data": user
+    });
 });
 
 // route.get('/find/Admin/all', authorization.authorization, async (req, res, next) => {
