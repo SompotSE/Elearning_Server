@@ -335,6 +335,27 @@ route.get('/Admin/User/Viwe', authorizationadmin.authorizationadmin, async (req,
     });
 });
 
+route.put('/ConfirmRegister', async (req, res, next) => {
+    const confirmRegisterKey = req.body.confirmRegisterKey;
+    var confirmRegister = [];
+    var query = `UPDATE user SET confirmRegister = 'A' WHERE confirmRegisterKey = :confirmRegisterKey AND confirmRegister = 'N'`;
+    confirmRegister = await sequelize.query(query, { replacements: { confirmRegisterKey: confirmRegisterKey }, type: QueryTypes.UPDATE });
+    console.log(confirmRegister[1], " confirmRegister")
+    if (confirmRegister[1] >= 1) {
+        res.json({
+            "status": true,
+            "message": "Success",
+            "data": confirmRegister
+        });
+    } else {
+        res.json({
+            "status": false,
+            "message": "Error",
+            "data": confirmRegister
+        });
+    }
+
+});
 
 async function sendEmail(email, genid) {
     const transporter = nodemailer.createTransport({
@@ -351,8 +372,8 @@ async function sendEmail(email, genid) {
         from: '"Confirm Register" <They2539@gmail.com>',
         to: email, // list of receivers
         subject: "ยืนยันสมัครสมาชิก", // Subject line
-        text: "ยืนยันสมัครสมาชิก คือ " + genid, // plain text body
-        html: "<b>ยืนยันสมัครสมาชิก คือ " + genid + "</b>" // html body
+        text: "คลิ้กลิ้งเพื่อยืนยันการสมัครสมาชิก http://localhost:3000/ConfirmRegister/" + genid, // plain text body
+        html: "<b>คลิ้กลิ้งเพื่อยืนยันการสมัครสมาชิก http://localhost:3000/ConfirmRegister/" + genid + "</b>" // html body
     }, function (err, info) {
         if (err) {
             console.log(err)
