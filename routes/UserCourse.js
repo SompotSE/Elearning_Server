@@ -108,11 +108,11 @@ route.get('/Course/Detail/:userIdCourse', authorizationadmin.authorizationadmin,
     user[0].userCourse = await sequelize.query(query, { replacements: { userId: userIdCourse }, type: QueryTypes.SELECT });
 
     await Promise.all(user[0].userCourse.map(async (item) => {
-        var query1 = `SELECT a.topicCode,a.courseCode,a.time FROM usertopic a WHERE a.courseCode = :courseCode ORDER BY a.topicCode ASC`;
-        item.topic = await sequelize.query(query1, { replacements: { courseCode: item.courseCode }, type: QueryTypes.SELECT });
+        var query1 = `SELECT a.topicCode,a.courseCode,a.time FROM usertopic a WHERE a.courseCode = :courseCode AND a.userId = :userId ORDER BY a.topicCode ASC`;
+        item.topic = await sequelize.query(query1, { replacements: { courseCode: item.courseCode, userId: userIdCourse }, type: QueryTypes.SELECT });
 
-        var query2 = `SELECT a.seq,a.courseCode,a.percenScore,a.time FROM userexamination a WHERE a.courseCode = :courseCode ORDER BY a.seq ASC`;
-        item.exam = await sequelize.query(query2, { replacements: { courseCode: item.courseCode }, type: QueryTypes.SELECT });
+        var query2 = `SELECT a.seq,a.courseCode,a.percenScore,a.time FROM userexamination a WHERE a.courseCode = :courseCode AND a.userId = :userId ORDER BY a.seq ASC`;
+        item.exam = await sequelize.query(query2, { replacements: { courseCode: item.courseCode, userId: userIdCourse }, type: QueryTypes.SELECT });
 
     }));
 

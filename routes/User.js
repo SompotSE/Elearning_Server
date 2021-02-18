@@ -150,6 +150,7 @@ route.post('/Login', async (req, res, next) => {
                                             "userCode": userName[0].userCode,
                                             "name": userName[0].name,
                                             "phone": userName[0].phone,
+                                            "userRoleId": userName[0].userRoleId
                                         },
                                         "expiresIn": 604800
                                     });
@@ -294,6 +295,46 @@ route.get('/Admin/User/All', authorizationadmin.authorizationadmin, async (req, 
         "data": user
     });
 });
+
+route.get('/Admin/User/Viwe', authorizationadmin.authorizationadmin, async (req, res, next) => {
+    var query = `SELECT COUNT(*) AS alluser FROM user`;
+    var userall = await sequelize.query(query, { type: QueryTypes.SELECT });
+
+    var query1 = `SELECT COUNT(*) AS courseuser FROM usercourse a GROUP BY a.userId`;
+    var courseuser = await sequelize.query(query1, { type: QueryTypes.SELECT });
+
+    var query2 = `SELECT COUNT(*) AS course1 FROM usercourse a WHERE a.courseCode = 'COURSE1001'`;
+    var course1 = await sequelize.query(query2, { type: QueryTypes.SELECT });
+
+    var query3 = `SELECT COUNT(*) AS course2 FROM usercourse a WHERE a.courseCode = 'COURSE1002'`;
+    var course2 = await sequelize.query(query3, { type: QueryTypes.SELECT });
+
+    var query4 = `SELECT COUNT(*) AS course3 FROM usercourse a WHERE a.courseCode = 'COURSE1003'`;
+    var course3 = await sequelize.query(query4, { type: QueryTypes.SELECT });
+
+    var query5 = `SELECT COUNT(*) AS course4 FROM usercourse a WHERE a.courseCode = 'COURSE1004'`;
+    var course4 = await sequelize.query(query5, { type: QueryTypes.SELECT });
+
+    var query6 = `SELECT COUNT(*) AS course5 FROM usercourse a WHERE a.courseCode = 'COURSE1005'`;
+    var course5 = await sequelize.query(query6, { type: QueryTypes.SELECT });
+
+    var data = {
+        "userall": userall[0].alluser,
+        "courseuser": courseuser[0].courseuser,
+        "course1": course1[0].course1,
+        "course2": course2[0].course2,
+        "course3": course3[0].course3,
+        "course4": course4[0].course4,
+        "course5": course5[0].course5
+    }
+
+    res.json({
+        "status": true,
+        "message": "Success",
+        "data": data
+    });
+});
+
 
 async function sendEmail(email, genid) {
     const transporter = nodemailer.createTransport({
