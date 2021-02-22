@@ -318,6 +318,9 @@ route.get('/Admin/User/Viwe', authorizationadmin.authorizationadmin, async (req,
     var query6 = `SELECT COUNT(*) AS course5 FROM usercourse a WHERE a.courseCode = 'COURSE1005'`;
     var course5 = await sequelize.query(query6, { type: QueryTypes.SELECT });
 
+    var query7 = 'SELECT a.userId,COUNT(*) AS pass FROM (SELECT userId,courseCode,max(percenScore) AS percenScore FROM userexamination GROUP BY userId,courseCode HAVING percenScore >= 80) a GROUP BY a.userId HAVING pass >= 5';
+    var course7 = await sequelize.query(query7, { type: QueryTypes.SELECT });
+
     var data = {
         "userall": userall[0].alluser,
         "courseuser": courseuser[0].courseuser,
@@ -325,7 +328,8 @@ route.get('/Admin/User/Viwe', authorizationadmin.authorizationadmin, async (req,
         "course2": course2[0].course2,
         "course3": course3[0].course3,
         "course4": course4[0].course4,
-        "course5": course5[0].course5
+        "course5": course5[0].course5,
+        "course6": course7.length
     }
 
     res.json({
