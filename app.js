@@ -16,6 +16,7 @@ const usertopic = require('./routes/UserTopic');
 const userexamination = require('./routes/UserExamination');
 
 const examination = require('./routes/Examination');
+const userAssessment = require('./routes/UserAssessment')
 
 app.use('/User', user);
 app.use('/ForgetPassword', forgetpassword);
@@ -23,5 +24,6 @@ app.use('/UserCourse', usercourse);
 app.use('/UserTopic', usertopic);
 app.use('/UserExamination', userexamination);
 app.use('/Examination', examination);
+app.use('/UserAssessment', userAssessment);
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));

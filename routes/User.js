@@ -272,7 +272,7 @@ route.post('/ChangePassword', authorization.authorization, async (req, res, next
 
 route.get('/Admin/User/All', authorizationadmin.authorizationadmin, async (req, res, next) => {
     var user = [];
-    var query = `SELECT a.userId,a.userCode,a.name,a.nameCompany FROM user a WHERE a.confirmRegister = 'A' AND a.userRoleId = 2`;
+    var query = `SELECT a.userId,a.userCode,a.name,a.name as value,a.nameCompany FROM user a WHERE a.confirmRegister = 'A' AND a.userRoleId = 2`;
     user = await sequelize.query(query, { type: QueryTypes.SELECT });
 
     await Promise.all(user.map(async (item) => {

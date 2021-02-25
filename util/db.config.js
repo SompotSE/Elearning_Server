@@ -24,5 +24,7 @@ db.ForgetPasswordModel = require('../model/ForgetPasswordModel.js')(sequelize, S
 db.UserCourseModel = require('../model/UserCourseModel.js')(sequelize, Sequelize);
 db.UserTopicModel = require('../model/UserTopicModel.js')(sequelize, Sequelize);
 db.UserExaminationModel = require('../model/UserExaminationModel.js')(sequelize, Sequelize);
+db.UserAssessmentModel = require('../model/UserAssessmentModel.js')(sequelize, Sequelize);
+db.CourseModel = require('../model/CourseModel.js')(sequelize, Sequelize);
 
 module.exports = db;
