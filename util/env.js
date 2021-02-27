@@ -2,7 +2,7 @@ const env = {
     database: 'elearning',
     username: 'HelpNCD',
     password: 'P@ssW0rd',
-    host: '178.128.57.150',
+    host: '206.189.43.0',
     dialect: 'mysql',
     pool: {
       max: 5,
