@@ -1,8 +1,8 @@
 const env = {
     database: 'elearning',
-    username: 'root',
-    password: '12345678',
-    host: 'localhost',
+    username: 'HelpNCD',
+    password: 'P@ssW0rd',
+    host: '178.128.57.150',
     dialect: 'mysql',
     pool: {
       max: 5,
