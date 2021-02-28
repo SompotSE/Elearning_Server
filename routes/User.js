@@ -18,6 +18,17 @@ route.get('/', async (req, res, next) => {
     res.send('Users Page')
 });
 
+route.put('/count', async (req, res, next) => {
+    var view = [];
+    var query = `UPDATE count SET countrow = countrow+1 WHERE countId = 1`;
+    view = await sequelize.query(query, { type: QueryTypes.UPDATE });
+    res.json({
+        "status": true,
+        "message": "Success",
+        "data": view
+    });
+});
+
 route.post('/UploadImg', async (req, res, next) => {
     res.send('UploadImg')
 });
