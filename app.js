@@ -8,6 +8,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 app.use(express.static('public'));
+app.use(express.static('video'));
 
 const user = require('./routes/User');
 const forgetpassword = require('./routes/ForgetPassword');
