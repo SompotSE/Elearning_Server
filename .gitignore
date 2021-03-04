@@ -1,6 +1,7 @@
 # node.js
 #
 /util/env.js
+/util/ScretKey.js
 video/
 node_modules/
 npm-debug.log
