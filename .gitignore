@@ -1,5 +1,6 @@
 # node.js
 #
+/util/env.js
 video/
 node_modules/
 npm-debug.log
