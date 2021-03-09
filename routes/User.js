@@ -311,7 +311,7 @@ route.get('/Admin/User/Viwe', authorizationadmin.authorizationadmin, async (req,
     var query = `SELECT COUNT(*) AS alluser FROM user`;
     var userall = await sequelize.query(query, { type: QueryTypes.SELECT });
 
-    var query1 = `SELECT COUNT(*) AS courseuser FROM usercourse a GROUP BY a.userId`;
+    var query1 = `SELECT COUNT(*) AS courseuser FROM usercourse a`;
     var courseuser = await sequelize.query(query1, { type: QueryTypes.SELECT });
 
     var query2 = `SELECT COUNT(*) AS course1 FROM usercourse a WHERE a.courseCode = 'COURSE1001'`;
