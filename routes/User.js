@@ -294,7 +294,7 @@ route.get('/Admin/User/All', authorizationadmin.authorizationadmin, async (req, 
                             (100 * SUM(z.countuser)) / SUM(z.countall) AS percen  
                     FROM (SELECT a.courseCode,COUNT(*) as countall, 0 AS countuser FROM topic a GROUP BY a.courseCode
                         UNION
-                        SELECT b.courseCode,0 AS countall,COUNT(*) as countuser FROM usertopic b WHERE b.userId = :userId GROUP BY b.courseCode ) z 
+                        SELECT b.courseCode,0 AS countall,COUNT(*) as countuser FROM usertopic b WHERE b.userId = :userId AND b.videoStatus = 'A' GROUP BY b.courseCode ) z 
                     GROUP BY z.courseCode
                     ORDER BY z.courseCode ASC`;
         item.detailTop = await sequelize.query(query, { replacements: { userId: item.userId }, type: QueryTypes.SELECT });

@@ -29,7 +29,7 @@ route.get('/find/all/user', authorization.authorization, async (req, res, next) 
                     SUM(z.countuser) AS countuser 
                 FROM (SELECT a.courseCode,COUNT(*) as countall, 0 AS countuser FROM topic a GROUP BY a.courseCode
                     UNION
-                    SELECT b.courseCode,0 AS countall,COUNT(*) as countuser FROM usertopic b WHERE b.userId = :userId GROUP BY b.courseCode ) z 
+                    SELECT b.courseCode,0 AS countall,COUNT(*) as countuser FROM usertopic b WHERE b.userId = :userId AND b.videoStatus = 'A' GROUP BY b.courseCode ) z 
                 GROUP BY z.courseCode
                 `;
     alltopicuser = await sequelize.query(query, { replacements: { userId: userId }, type: QueryTypes.SELECT });
@@ -90,9 +90,29 @@ route.put('/update/time/:courseCode/:topicCode', authorization.authorization, as
     const userId = req.params.userId;
     const time = req.body;
     var view = [];
+    var timegetupdate = [];
     var query = `UPDATE usertopic SET TIME = (TIME + :time ) WHERE courseCode = :courseCode AND topicCode = :topicCode AND userId = :userId`;
     view = await sequelize.query(query, { replacements: { time: time.time, courseCode: courseCode, topicCode: topicCode, userId: userId }, type: QueryTypes.UPDATE });
     // await UserCourseModel.update(courseUpdate, { where: { userId: userId, courseCode: courseCode, recStatus: "A" }, transaction: t });
+
+    var query1 = `SELECT * FROM usertopic a WHERE courseCode = :courseCode AND topicCode = :topicCode AND userId = :userId`;
+    timegetupdate = await sequelize.query(query1, { replacements: { courseCode: courseCode, topicCode: topicCode, userId: userId }, type: QueryTypes.SELECT });
+
+    res.json({
+        "status": true,
+        "message": "Success",
+        "data": timegetupdate
+    });
+});
+
+route.put('/update/statustopic/:courseCode/:topicCode', authorization.authorization, async (req, res, next) => {
+    const courseCode = req.params.courseCode;
+    const topicCode = req.params.topicCode;
+    const userId = req.params.userId;
+    var view = [];
+    var query = `UPDATE usertopic SET videoStatus = 'A' WHERE courseCode = :courseCode AND topicCode = :topicCode AND userId = :userId`;
+    view = await sequelize.query(query, { replacements: { courseCode: courseCode, topicCode: topicCode, userId: userId }, type: QueryTypes.UPDATE });
+
     res.json({
         "status": true,
         "message": "Success",

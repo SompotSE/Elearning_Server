@@ -23,6 +23,10 @@ module.exports = (sequelize, Sequelize) => {
                 type: Sequelize.INTEGER,
                 field: 'time'
             },
+            videoStatus: {
+                type: Sequelize.STRING,
+                field: 'videoStatus'
+            },
             recStatus: {
                 type: Sequelize.STRING,
                 field: 'recStatus'

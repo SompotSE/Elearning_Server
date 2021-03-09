@@ -36,15 +36,18 @@ route.get('/ExamPost/TopScore', authorizationadmin.authorizationadmin, async (re
     await Promise.all(course.map(async (item) => {
         var query = `SELECT 
                         b.courseCode,
-                        max(b.percenScore) AS percenScore,
+                        b.percenScore AS percenScore,
                         c.name,
                         c.nameCompany
                     FROM course a
                         LEFT JOIN userexamination b ON a.courseCode = b.courseCode 
                         LEFT JOIN user c ON b.userId = c.userId
                     WHERE a.courseCode = :courseCode
+                    ORDER BY b.percenScore DESC 
+                    LIMIT 1
                     `;
         topScore.push(...await sequelize.query(query, { replacements: { courseCode: item.courseCode }, type: QueryTypes.SELECT }));
+        console.log(topScore , " topScore")
     }));
 
     res.json({
@@ -63,7 +66,7 @@ route.post('/Send/Answer/ExamPost/:CourseCode/:time', authorization.authorizatio
     var seqIns = 1;
     var score = 0;
     var percenScore = 0;
-    var query = `SELECT MAX(a.seq) AS seq FROM userexamination a WHERE a.userId = :userId AND a.courseCode = 'COURSE1001' `;
+    var query = `SELECT MAX(a.seq) AS seq FROM userexamination a WHERE a.userId = :userId AND a.courseCode = :courseCode `;
     var seq = await sequelize.query(query, { replacements: { userId: userId, courseCode: courseCode }, type: QueryTypes.SELECT });
 
     if (seq[0].seq != null) {
